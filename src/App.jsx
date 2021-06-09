@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     minWidth: 120,
   },
+  selectedFiles: {
+    paddingTop: theme.spacing(1),
+  },
 }));
 
 const formats = [
@@ -65,6 +68,8 @@ function App() {
     setSelectedFiles(files);
   };
 
+  const handleConvert = (event) => {};
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -84,7 +89,7 @@ function App() {
                   accept="image/*"
                   type="file"
                   hidden
-                  multiple
+                  // multiple
                   onChange={handleFileSelected}
                 />
               </Button>
@@ -101,6 +106,7 @@ function App() {
                   id="format-select-label"
                   value={format}
                   onChange={handleSelect}
+                  label="Format"
                 >
                   {formats.map((format, index) => (
                     <MenuItem key={"formats-" + index} value={format}>
@@ -110,11 +116,24 @@ function App() {
                 </Select>
               </FormControl>
             </Grid>
+            <Grid item>
+              <Button
+                className={classes.button}
+                variant="contained"
+                color="primary"
+                onClick={handleConvert}
+              >
+                Convert
+              </Button>
+            </Grid>
           </Grid>
           <div className={classes.filesContainer}>
             {selectedFiles.map((file, index) => {
               return (
-                <Typography key={"files-" + index}>
+                <Typography
+                  key={"files-" + index}
+                  className={classes.selectedFiles}
+                >
                   {index + 1 + ". " + file.name}
                 </Typography>
               );
