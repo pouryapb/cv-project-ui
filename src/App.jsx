@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   filesContainer: {
     padding: theme.spacing(2),
   },
+  formControl: {
+    minWidth: 120,
+  },
 }));
 
 const formats = [
@@ -49,7 +52,7 @@ const formats = [
 
 function App() {
   const classes = useStyles();
-  const [format, setFormat] = useState("");
+  const [format, setFormat] = useState("jpeg");
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleSelect = (event) => {
@@ -87,7 +90,11 @@ function App() {
               </Button>
             </Grid>
             <Grid item>
-              <FormControl variant="outlined" color="secondary">
+              <FormControl
+                variant="outlined"
+                color="secondary"
+                className={classes.formControl}
+              >
                 <InputLabel id="format-select-label">Format</InputLabel>
                 <Select
                   labelId="format-select-label"
@@ -95,24 +102,24 @@ function App() {
                   value={format}
                   onChange={handleSelect}
                 >
-                  <div className={classes.filesContainer}>
-                    {formats.map((format, index) => (
-                      <MenuItem key={index} value={format}>
-                        {format}
-                      </MenuItem>
-                    ))}
-                  </div>
+                  {formats.map((format, index) => (
+                    <MenuItem key={"formats-" + index} value={format}>
+                      {format}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
           </Grid>
-          {selectedFiles.map((file, index) => {
-            return (
-              <Typography key={index}>
-                {index + 1 + ". " + file.name}
-              </Typography>
-            );
-          })}
+          <div className={classes.filesContainer}>
+            {selectedFiles.map((file, index) => {
+              return (
+                <Typography key={"files-" + index}>
+                  {index + 1 + ". " + file.name}
+                </Typography>
+              );
+            })}
+          </div>
         </Paper>
       </Container>
     </ThemeProvider>
