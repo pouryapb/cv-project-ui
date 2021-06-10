@@ -49,7 +49,6 @@ const formats = [
   "tiff",
   "eps",
   "WebP",
-  "svg",
   "pdf",
   "txt",
 ];
@@ -98,7 +97,10 @@ function App() {
         res.blob().then((blob) => download(blob, `result.${format}`));
         setIsLoading(false);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        console.log("error", error);
+        setIsLoading(false);
+      });
   };
 
   return (
