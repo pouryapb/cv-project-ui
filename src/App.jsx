@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Button,
+  CircularProgress,
   Container,
   createMuiTheme,
   CssBaseline,
@@ -57,6 +58,7 @@ function App() {
   const classes = useStyles();
   const [format, setFormat] = useState("jpg");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSelect = (event) => {
     setFormat(event.target.value);
@@ -82,19 +84,19 @@ function App() {
   };
 
   const handleConvert = (event) => {
-    let formdata = new FormData();
+    const formdata = new FormData();
     formdata.append("image", selectedFiles[0]);
     formdata.append("format", format);
 
-    let requestOptions = {
+    setIsLoading(true);
+    fetch("https://image-format-converter.herokuapp.com/convert", {
       method: "POST",
       body: formdata,
-    };
-
-    fetch("http://localhost:2999/convert", requestOptions)
+    })
       .then((res) => {
         // console.log(res);
         res.blob().then((blob) => download(blob, `result.${format}`));
+        setIsLoading(false);
       })
       .catch((error) => console.log("error", error));
   };
@@ -153,11 +155,16 @@ function App() {
                 variant="contained"
                 color="primary"
                 onClick={handleConvert}
-                disabled={selectedFiles.length === 0}
+                disabled={selectedFiles.length === 0 || isLoading}
               >
                 Convert
               </Button>
             </Grid>
+            {isLoading && (
+              <Grid item xs={12} md="auto">
+                <CircularProgress color="secondary" />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <Typography color="error" variant="caption">
                 *Not working correctly with IDM (disable extention)
