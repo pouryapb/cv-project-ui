@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   filesContainer: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(2, 0),
   },
   formControl: {
     minWidth: 160,
@@ -105,7 +105,7 @@ function App() {
       <Container>
         <Paper className={classes.paper}>
           <Grid container spacing={2}>
-            <Grid item>
+            <Grid item xs={6} md="auto">
               <Button
                 className={classes.button}
                 startIcon={<CloudUpload />}
@@ -123,7 +123,7 @@ function App() {
                 />
               </Button>
             </Grid>
-            <Grid item>
+            <Grid item xs={6} md="auto">
               <FormControl
                 variant="outlined"
                 color="secondary"
@@ -147,7 +147,7 @@ function App() {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item>
+            <Grid item xs={12} md="auto">
               <Button
                 className={classes.button}
                 variant="contained"
@@ -157,6 +157,11 @@ function App() {
               >
                 Convert
               </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography color="error" variant="caption">
+                *Not working correctly with IDM (disable extention)
+              </Typography>
             </Grid>
           </Grid>
           <div className={classes.filesContainer}>
