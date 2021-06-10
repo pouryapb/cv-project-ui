@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   formControl: {
-    minWidth: 120,
+    minWidth: 160,
   },
   selectedFiles: {
     paddingTop: theme.spacing(1),
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const formats = [
-  "jpeg",
+  "jpg",
   "png",
   "gif",
   "bmp",
@@ -55,7 +55,7 @@ const formats = [
 
 function App() {
   const classes = useStyles();
-  const [format, setFormat] = useState("jpeg");
+  const [format, setFormat] = useState("jpg");
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const handleSelect = (event) => {
@@ -64,11 +64,40 @@ function App() {
 
   const handleFileSelected = (event) => {
     const files = Array.from(event.target.files);
-    console.log("files:", files);
+    // console.log("files:", files);
     setSelectedFiles(files);
   };
 
-  const handleConvert = (event) => {};
+  const download = (blob, filename) => {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    // the filename you want
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  const handleConvert = (event) => {
+    let formdata = new FormData();
+    formdata.append("image", selectedFiles[0]);
+    formdata.append("format", format);
+
+    let requestOptions = {
+      method: "POST",
+      body: formdata,
+    };
+
+    fetch("http://localhost:2999/convert", requestOptions)
+      .then((res) => {
+        // console.log(res);
+        res.blob().then((blob) => download(blob, `result.${format}`));
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,13 +129,15 @@ function App() {
                 color="secondary"
                 className={classes.formControl}
               >
-                <InputLabel id="format-select-label">Format</InputLabel>
+                <InputLabel id="format-select-label">
+                  Destination format
+                </InputLabel>
                 <Select
                   labelId="format-select-label"
                   id="format-select-label"
                   value={format}
                   onChange={handleSelect}
-                  label="Format"
+                  label="Destination format"
                 >
                   {formats.map((format, index) => (
                     <MenuItem key={"formats-" + index} value={format}>
@@ -122,6 +153,7 @@ function App() {
                 variant="contained"
                 color="primary"
                 onClick={handleConvert}
+                disabled={selectedFiles.length === 0}
               >
                 Convert
               </Button>
@@ -134,7 +166,7 @@ function App() {
                   key={"files-" + index}
                   className={classes.selectedFiles}
                 >
-                  {index + 1 + ". " + file.name}
+                  {file.name}
                 </Typography>
               );
             })}
