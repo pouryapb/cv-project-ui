@@ -109,7 +109,7 @@ function App() {
       <Container>
         <Paper className={classes.paper}>
           <Grid container spacing={2}>
-            <Grid item xs={6} md="auto">
+            <Grid item xs={12} md="auto">
               <Button
                 className={classes.button}
                 startIcon={<CloudUpload />}
@@ -127,7 +127,7 @@ function App() {
                 />
               </Button>
             </Grid>
-            <Grid item xs={6} md="auto">
+            <Grid item xs={12} md="auto">
               <FormControl
                 variant="outlined"
                 color="secondary"
